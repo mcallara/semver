@@ -1,0 +1,30 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Python Semantic Release
+      run: |
+        pip install python-semantic-release
+        semantic-release version
+        semantic-release publish
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
